@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- 1. MariaDB network wire driver -->
+        <property name="jakarta.persistence.jdbc.driver">org.mariadb.jdbc.Driver</property>
+
+        <!-- 2. local XAMPP network socket and schema name -->
+        <property name="jakarta.persistence.jdbc.url">jdbc:mariadb://127.0.0.1:3306/maven_demo_db</property>
+
+        <!-- 3. XAMPP user credentials -->
+        <property name="jakarta.persistence.jdbc.user">root</property>
+        <property name="jakarta.persistence.jdbc.password">root</property>
+
+        <!-- 4. MySQL translation layer -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <!-- Debugging console properties -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+
+        <mapping class="ticketing.Ticket"/>
+    </session-factory>
+</hibernate-configuration>
+

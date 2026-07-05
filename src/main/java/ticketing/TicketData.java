@@ -2,6 +2,7 @@ package ticketing;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import jakarta.persistence.*;
 
 // ENUMS
 enum TicketCategory {
@@ -17,20 +18,47 @@ enum PriorityLevel {
 }
 
 // CORE MODEL
-class Ticket {
-    private String customerName;
-    private String contact;
-    private TicketCategory category;
-    private LocalDate creationDate;
-    private String issueDescription;
-    private TicketStatus status;
-    private PriorityLevel priorityLevel;
-    private String additionalComments;
 
+@Entity
+@Table(name = "tickets")
+class Ticket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "customer_name", nullable = false)
+    private String customerName;
+
+    @Column(nullable = false)
+    private String contact;
+
+    @Enumerated(EnumType.STRING)
+    private TicketCategory category;
+
+    @Column(name = "creation_date", nullable = false)
+    private LocalDate creationDate;
+
+    @Column(name = "issue_description", length = 1000)
+    private String issueDescription;
+
+    @Enumerated(EnumType.STRING)
+    private TicketStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private PriorityLevel priorityLevel;
+
+    @Column(name = "additional_comments")
+    private String additionalComments;
 
 
     //Date Format rule
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+
+    //No-argument constructor to rebuild objects from DB rows
+    public Ticket() {}
+
 
     public Ticket(String customerName, String contact, TicketCategory category,
                   String issueDescription, TicketStatus status,

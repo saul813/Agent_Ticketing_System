@@ -15,6 +15,35 @@
     </properties>
 
 
+
+    <dependencies>
+        <!-- JUnit 5 for Unit Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Hibernate ORM Core Engine -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.6.1.Final</version>
+        </dependency>
+
+        <!-- Official MariaDB Driver Client -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+
+    </dependencies>
+
+
+
+
     <build>
         <plugins>
             <!-- Exec Plugin to run your program easily from terminal -->
