@@ -51,7 +51,7 @@ class CallAgent {
         System.out.printf("%-5s | %-12s | %-12s | %-12s | %-10s\n", "Index", "Customer", "Category", "Priority", "Status");
         System.out.println("---------------------------------------------------------------------------------");
         for (Ticket t : tickets) {
-            System.out.printf("#%-3d | %-12s | %-12s | %-12s | %-10s\n", t.getId(), t.getCustomerName(), t.getCategory(), t.getPriorityLevel(), t.getStatus());
+            System.out.printf("#%-4d | %-12s | %-12s | %-12s | %-10s\n", t.getId(), t.getCustomerName(), t.getCategory(), t.getPriorityLevel(), t.getStatus());
         }
 
     }
