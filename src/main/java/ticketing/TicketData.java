@@ -87,6 +87,8 @@ class Ticket {
     public PriorityLevel getPriorityLevel() { return priorityLevel; }
     public String getAdditionalComments() { return additionalComments; }
 
+    public Long getId() { return id; }
+
     // Setters
     public void setStatus(TicketStatus status) { this.status = status; }
     public void setPriorityLevel(PriorityLevel priorityLevel) { this.priorityLevel = priorityLevel; }

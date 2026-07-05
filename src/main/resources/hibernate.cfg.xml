@@ -10,13 +10,13 @@
         <property name="jakarta.persistence.jdbc.driver">org.mariadb.jdbc.Driver</property>
 
         <!-- 2. local XAMPP network socket and schema name -->
-        <property name="jakarta.persistence.jdbc.url">jdbc:mariadb://127.0.0.1:3306/maven_demo_db</property>
+        <property name="jakarta.persistence.jdbc.url">jdbc:mariadb://127.0.0.1:3306/tickets_db</property>
 
         <!-- 3. XAMPP user credentials -->
         <property name="jakarta.persistence.jdbc.user">root</property>
         <property name="jakarta.persistence.jdbc.password">root</property>
 
-        <!-- 4. MySQL translation layer -->
+        <!-- 4. MySQL translation -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
         <!-- Debugging console properties -->

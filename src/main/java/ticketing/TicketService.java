@@ -1,66 +1,89 @@
 package ticketing;
 
 import java.util.*;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import java.util.List;
 
 // BUSINESS LOGIC
 class CallAgent {
-    private List<Ticket> ticketsStorage = new ArrayList<>();
+    private static final SessionFactory factory = new Configuration().configure().buildSessionFactory();
 
     public Ticket createTicket(String customerName, String contact, TicketCategory category,
                                String issueDescription, TicketStatus status,
                                PriorityLevel priorityLevel, String additionalComments) {
         Ticket freshTicket = new Ticket(customerName, contact, category, issueDescription, status, priorityLevel, additionalComments);
-        ticketsStorage.add(freshTicket);
+
+        // Open DB session and save record using transactions
+        try (Session session = factory.openSession()) {
+            Transaction tx = session.beginTransaction();
+            session.persist(freshTicket);//save directly to DB row
+            tx.commit();
+        }
         return freshTicket;
     }
 
     public Ticket getTicketByCustomerName(String customerName) {
-        for (Ticket currentTicket : ticketsStorage) {
-            if (currentTicket.getCustomerName().equalsIgnoreCase(customerName.trim())) {
-                return currentTicket;
-            }
+        try (Session session = factory.openSession()) {
+            String query = "FROM Ticket WHERE lower(customerName) = : name";
+            return session.createQuery(query, Ticket.class)
+                    .setParameter("name", customerName.trim().toLowerCase())
+                    .uniqueResult();
         }
-        return null;
+    }
+
+    public List<Ticket> getAllTickets() {
+        try (Session session = factory.openSession()) {
+            return session.createQuery("FROM Ticket", Ticket.class).list();
+        }
     }
 
     public void printSummaryDashboard() {
-        if (ticketsStorage.isEmpty()) {
-            System.out.println("No tickets Found in the System.");
+        List<Ticket> tickets = getAllTickets();
+        if (tickets.isEmpty()) {
+            System.out.println("No tickets Found in the System Database.");
             return;
         }
 
         System.out.println("\n=========== ACTIVE TICKETS DASHBOARD ==========");
         System.out.printf("%-5s | %-12s | %-12s | %-12s | %-10s\n", "Index", "Customer", "Category", "Priority", "Status");
         System.out.println("---------------------------------------------------------------------------------");
-
-        for (Integer i = 0; i < ticketsStorage.size(); i++) {
-            Ticket t = ticketsStorage.get(i);
-            System.out.printf("#%-4d | %-12s | %-12s | %-12s | %-10s\n",
-                    i, t.getCustomerName(), t.getCategory(), t.getPriorityLevel(), t.getStatus());
+        for (Ticket t : tickets) {
+            System.out.printf("#%-3d | %-12s | %-12s | %-12s | %-10s\n", t.getId(), t.getCustomerName(), t.getCategory(), t.getPriorityLevel(), t.getStatus());
         }
-        System.out.println("=================================================================================\n");
+
     }
 
     public boolean deleteTicketByCustomer(String customerName) {
-        for (int i = 0; i < ticketsStorage.size(); i++) {
-            if (ticketsStorage.get(i).getCustomerName().equalsIgnoreCase(customerName.trim())) {
-                ticketsStorage.remove(i);
+        try (Session session = factory.openSession()) {
+            Transaction tx = session.beginTransaction();
+            Ticket ticket = getTicketByCustomerName(customerName);
+            if (ticket != null) {
+                session.remove(ticket);
+                tx.commit();
                 return true;
             }
+            return false;
         }
-        return false;
     }
 
     public boolean updateTicket(String customerName, TicketStatus newStatus,
                                 PriorityLevel newPriorityLevel, String newAdditionalComments) {
-        Ticket ticket = getTicketByCustomerName(customerName);
-        if (ticket != null) {
-            ticket.setStatus(newStatus);
-            ticket.setPriorityLevel(newPriorityLevel);
-            ticket.setAdditionalComments(newAdditionalComments);
-            return true;
+        try (Session session = factory.openSession()) {
+            Transaction tx = session.beginTransaction();
+            Ticket ticket = getTicketByCustomerName(customerName);
+            if (ticket != null) {
+                ticket.setStatus(newStatus);
+                ticket.setPriorityLevel(newPriorityLevel);
+                ticket.setAdditionalComments(newAdditionalComments);
+                session.merge(ticket); // Overwrites historical record safely
+                tx.commit();
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 }
 
@@ -123,3 +146,4 @@ class InputHandler {
         }
     }
 }
+
