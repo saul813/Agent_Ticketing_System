@@ -64,7 +64,7 @@ class CallAgent {
     }
 }
 
-// 4. VALIDATION UTILITIES
+// VALIDATION UTILITIES
 class InputHandler {
     private static final Scanner scanner = new Scanner(System.in);
 
