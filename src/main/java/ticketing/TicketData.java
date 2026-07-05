@@ -1,6 +1,7 @@
 package ticketing;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 // ENUMS
 enum TicketCategory {
@@ -20,11 +21,16 @@ class Ticket {
     private String customerName;
     private String contact;
     private TicketCategory category;
-    private Date creationDate;
+    private LocalDate creationDate;
     private String issueDescription;
     private TicketStatus status;
     private PriorityLevel priorityLevel;
     private String additionalComments;
+
+
+
+    //Date Format rule
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Ticket(String customerName, String contact, TicketCategory category,
                   String issueDescription, TicketStatus status,
@@ -32,7 +38,7 @@ class Ticket {
         this.customerName = customerName;
         this.contact = contact;
         this.category = category;
-        this.creationDate = new Date();
+        this.creationDate = LocalDate.now();
         this.issueDescription = issueDescription;
         this.status = status;
         this.priorityLevel = priorityLevel;
@@ -43,7 +49,11 @@ class Ticket {
     public String getCustomerName() { return customerName; }
     public String getContact() { return contact; }
     public TicketCategory getCategory() { return category; }
-    public Date getCreationDate() { return creationDate; }
+    public LocalDate getCreationDate() { return creationDate; }
+    // Helper method to get the clean formatted string
+    public String getFormattedCreationDate() {
+        return creationDate.format(DATE_FORMATTER);
+    }
     public String getIssueDescription() { return issueDescription; }
     public TicketStatus getStatus() { return status; }
     public PriorityLevel getPriorityLevel() { return priorityLevel; }
@@ -61,7 +71,7 @@ class Ticket {
         System.out.println(" Customer Name : " + this.customerName);
         System.out.println(" Contact Info  : " + this.contact);
         System.out.println(" Category      : " + this.category);
-        System.out.println(" Timestamp     : " + this.creationDate);
+        System.out.println(" Creation Date : " + this.getFormattedCreationDate());
         System.out.println(" Status        : [" + this.status + "]");
         System.out.println(" Priority Tier : [" + this.priorityLevel + "]");
         System.out.println("----------------------------------------");
